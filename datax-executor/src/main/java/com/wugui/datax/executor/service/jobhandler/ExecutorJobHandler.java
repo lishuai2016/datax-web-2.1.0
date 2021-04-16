@@ -34,10 +34,10 @@ import java.util.List;
 public class ExecutorJobHandler extends IJobHandler {
 
     @Value("${datax.executor.jsonpath}")
-    private String jsonpath;
+    private String jsonpath;// 存储执行json的临时目录
 
     @Value("${datax.pypath}")
-    private String dataXPyPath;
+    private String dataXPyPath;//datax python脚本路径
 
     @Override
     public ReturnT<String> execute(TriggerParam tgParam) throws Exception {
@@ -45,15 +45,16 @@ public class ExecutorJobHandler extends IJobHandler {
         Thread inputThread = null;
         Thread errThread = null;
         String tmpFilePath;
-        //生成Json临时文件
+        //1、生成Json临时文件（datax运行脚本）
         tmpFilePath = generateTemJsonFile(tgParam.getJobJson());
-        try {
+        try { //2、构建执行命令：python datax.py ./xxx.json
             String[] cmdarrayFinal = buildCmd(tgParam, tmpFilePath);
+            //3、核心是使用这里拉起python脚本
             final Process process = Runtime.getRuntime().exec(cmdarrayFinal);
             String processId = ProcessUtil.getProcessId(process);
             JobLogger.log("------------------DataX运行进程Id: " + processId);
-            jobTmpFiles.put(processId, tmpFilePath);
-            //更新任务进程Id
+            jobTmpFiles.put(processId, tmpFilePath);//缓存进程id和执行脚本名称
+            //4、回调调度中心更新任务进程Id
             ProcessCallbackThread.pushCallBack(new HandleProcessCallbackParam(tgParam.getLogId(), tgParam.getLogDateTime(), processId));
             // log-thread
             inputThread = new Thread(() -> {
