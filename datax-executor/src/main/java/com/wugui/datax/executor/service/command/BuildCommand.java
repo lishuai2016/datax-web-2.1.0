@@ -23,7 +23,7 @@ import static com.wugui.datax.executor.service.jobhandler.DataXConstant.*;
  *
  * @author jingwk 2020-06-07
  */
-public class BuildCommand {
+public class BuildCommand {//运行命令： python {YOUR_DATAX_HOME}/bin/datax.py {YOUR_DATAX_HOME}/job/job.json
 
     /**
      * DataX command build
@@ -38,7 +38,7 @@ public class BuildCommand {
         List<String> cmdArr = new ArrayList<>();
         cmdArr.add("python");
         String dataXHomePath = SystemUtils.getDataXHomePath();
-        if (StringUtils.isNotEmpty(dataXHomePath)) {
+        if (StringUtils.isNotEmpty(dataXHomePath)) {//python {YOUR_DATAX_HOME}/bin/datax.py {YOUR_DATAX_HOME}/job/job.json
             dataXPyPath = dataXHomePath.contains("bin") ? dataXHomePath + DEFAULT_DATAX_PY : dataXHomePath + "bin" + File.separator + DEFAULT_DATAX_PY;
         }
         cmdArr.add(dataXPyPath);

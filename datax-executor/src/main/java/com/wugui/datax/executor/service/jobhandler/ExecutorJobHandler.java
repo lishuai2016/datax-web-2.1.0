@@ -31,7 +31,7 @@ import static com.wugui.datax.executor.service.logparse.AnalysisStatistics.analy
 
 @JobHandler(value = "executorJobHandler")
 @Component
-public class ExecutorJobHandler extends IJobHandler {
+public class ExecutorJobHandler extends IJobHandler {//把原生的datax的python命令执行，封装成一个个的执行器
 
     @Value("${datax.executor.jsonpath}")
     private String jsonPath;
@@ -50,7 +50,7 @@ public class ExecutorJobHandler extends IJobHandler {
         //Generate JSON temporary file
         tmpFilePath = generateTemJsonFile(trigger.getJobJson());
 
-        try {
+        try {//python {YOUR_DATAX_HOME}/bin/datax.py {YOUR_DATAX_HOME}/job/job.json
             String[] cmdarrayFinal = buildDataXExecutorCmd(trigger, tmpFilePath,dataXPyPath);
             final Process process = Runtime.getRuntime().exec(cmdarrayFinal);
             String prcsId = ProcessUtil.getProcessId(process);
